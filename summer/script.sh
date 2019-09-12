@@ -3,7 +3,7 @@ set -x
 #compiling the Sum.g4 in java files
 java -jar "antlr-4.7.2-complete.jar" -no-listener -visitor Summer.g4
 #exporting the class path
-export CLASSPATH=".:/antlr-4.7.2-complete.jar:$CLASSPATH"
+export CLASSPATH=".:antlr-4.7.2-complete.jar:$CLASSPATH"
 #compiling the .java generated from Sum.g4 with MyParser.java and AddVisitor.java
 javac *.java
 #feeding a string and reading the tokens

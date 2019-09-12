@@ -16,7 +16,7 @@ public class SummerParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, NUM=3, ADD=4;
+		T__0=1, T__1=2, NUM=3, ADD=4, VAR=5;
 	public static final int
 		RULE_root = 0, RULE_expr = 1;
 	private static String[] makeRuleNames() {
@@ -34,7 +34,7 @@ public class SummerParser extends Parser {
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, "NUM", "ADD"
+			null, null, null, "NUM", "ADD", "VAR"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -249,7 +249,7 @@ public class SummerParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\6\30\4\2\t\2\4\3"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\7\30\4\2\t\2\4\3"+
 		"\t\3\3\2\3\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\7\3\23\n\3\f\3\16"+
 		"\3\26\13\3\3\3\2\3\4\4\2\4\2\2\2\26\2\6\3\2\2\2\4\f\3\2\2\2\6\7\7\3\2"+
 		"\2\7\b\5\4\3\2\b\t\7\6\2\2\t\n\5\4\3\2\n\13\7\4\2\2\13\3\3\2\2\2\f\r\b"+

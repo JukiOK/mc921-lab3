@@ -14,10 +14,10 @@ muldiv: muldiv '*' paren #muldivMul
       | paren		 #muldivParen
       ;
 
-func: ID '(' ids ')' #func
+func: ID '(' ids ')' #function ;
 
 ids: ids ',' ids
-   | ID 
+   | ID
    ;
 
 paren: ID	#parenID
