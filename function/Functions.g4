@@ -1,7 +1,9 @@
 grammar Functions;
 
-dec: 'var' ID '=' expr #decVar
-   | 'func' ID '(' ids ')' expr #decFunc
+
+
+root: 'var' ID '=' expr ';' #decVar
+   | 'func' ID '(' ids ')' expr ';' #decFunc
    ;
 
 expr: expr '+' muldiv #exprSoma
@@ -14,7 +16,7 @@ muldiv: muldiv '*' paren #muldivMul
       | paren		 #muldivParen
       ;
 
-func: ID '(' ids ')' #function ;
+func: ID '(' ids ')' #function ; 
 
 ids: ids ',' ids
    | ID
@@ -29,3 +31,5 @@ paren: ID	#parenID
 
 ID: [a-zA-Z_][a-zA-Z0-9_]*;
 NUM : [0-9]+;
+SPACE: [ \t\n]+ -> skip ;
+
