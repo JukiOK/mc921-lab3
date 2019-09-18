@@ -1,2 +1,7 @@
-summer/
 *.class
+*.interp
+*.tokens
+*.java
+!FuncVisitor.java
+!MyParser.java
+summer/
