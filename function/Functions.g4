@@ -1,4 +1,4 @@
-grammar Functions;
+grammar Functions;  
 
 root: root root
    | dec

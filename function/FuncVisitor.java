@@ -89,4 +89,23 @@ public class FuncVisitor extends FunctionsBaseVisitor<Integer> {
     }
 
     public Integer visitExprSoma(FunctionsParser.ExprSomaContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+
+		public Integer visitExprSub(FunctionsParser.ExprSubContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+
+		public Integer visitExprMuldiv(FunctionsParser.ExprMuldivContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+
+		public Integer visitMuldivMul(FunctionsParser.MuldivMulContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+
+		public Integer visitMuldivDiv(FunctionsParser.MuldivDivContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+
+		public Integer visitMuldivParen(FunctionsParser.MuldivParenContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+
+		public Integer visitParenId(FunctionsParser.ParenIDContext ctx){
+			System.out.println("parenid")
+			if(param.get(ctx.ID().getText()) == NULL){ //Se não tem id no parametro local, erro não foi declarado
+				System.out.println("Symbol undeclared: " + ctx.ID().getText());
+			}
+		}
+
+		public Integer visit
 }
