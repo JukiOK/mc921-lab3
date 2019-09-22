@@ -1,10 +1,11 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FuncVisitor extends FunctionsBaseVisitor<Integer> {
 
-	private HashMap<String, String> dec = new HashMap<String, String>(); //guarda função e quantidade de parametros
-	private HashMap<String, String> var = new HashMap<String, String>(); // guarda variáveis
-	private HashMap<String, String> param = new HashMap<String, String>(); // guarda parametros da função, para verificar se as variáveis estão no escopo dela
+	private HashMap<String, Integer> funcs = new HashMap<String, Integer>(); //guarda função e quantidade de parametros
+	private ArrayList<String> var = new ArrayList<String>(); // guarda variáveis
+	private ArrayList<String> param = new ArrayList<String>(); // guarda parametros da função, para verificar se as variáveis estão no escopo dela
 
 //    @Override
 //     public Integer visitRoot(FunctionsParser.RootContext ctx)
@@ -27,85 +28,141 @@ public class FuncVisitor extends FunctionsBaseVisitor<Integer> {
 		//ctx.ID()- pegar contexto de ID, pra navegar na árvore, getText pega valor do contexto
 		//o que mais importa é printar as coisas
 
-    public Integer visitParenID(FunctionsParser.ParenIDContext ctx) {
-    	String type = dec.get(ctx.ID().getText());
-    	if(type != null && type.equals("VAR")) {
-    		 dec.get(ctx.ID().getText());
-    	}else if (type == null){
-			//ERRO não foi declarado
-			System.out.println("Symbol undeclared: " + ctx.ID().getText());
-			}else{
-				//ERRO Bad use
-				System.out.println("Bad used symbol: " + ctx.ID().getText());
-			}
-			return 0;
-    }
+//    public Integer visitParenID(FunctionsParser.ParenIDContext ctx) {
+////    	String type = dec.get(ctx.ID().getText());
+////    	if(type != null && type.equals("VAR")) {
+////    		 dec.get(ctx.ID().getText());
+////    	}else if (type == null){
+////			//ERRO não foi declarado
+////			System.out.println("Symbol undeclared: " + ctx.ID().getText());
+////		}else{
+////			//ERRO Bad use
+////			System.out.println("Bad used symbol: " + ctx.ID().getText());
+////		}
+//		return 0;
+//    }
 
     @Override
     public Integer visitDecVar(FunctionsParser.DecVarContext ctx) {
-    	if(var.get(ctx.ID().getText()) == null) {
-    		var.put(ctx.ID().getText(), "VAR");
-    		System.out.println("Symbol already declared: " + ctx.ID().getText());
+    	if(!var.contains(ctx.ID().getText())) {
+    		var.add(ctx.ID().getText());
     	}else {
     	//ERRO já foi declarado
     		System.out.println("Symbol already declared: " + ctx.ID().getText());
     	}
-    	System.out.println("No visit decvar teste2" + var.toString());
-			return 0;
+    	System.out.println("No visit decvar teste2: " + var.toString());
+		return 0;
     }
 
-		public Integer visitDecFunc(FunctionsParser.DecFuncContext ctx){
-			int n = visit(ctx.paramIds()); //guardar funções no hash com quantidade de parametros
-			dec.put(ctx.ID().getText(), n);
-			System.out.println("vetor parametros" + param.toString());
-		}
+	public Integer visitDecFunc(FunctionsParser.DecFuncContext ctx){
+		param.clear();
+		int n = visit(ctx.ids()); //guardar funções no hash com quantidade de parametros
+		funcs.put(ctx.ID().getText(), n);
+		visit(ctx.expr());
+		return 0;
+	}
 
-		public Integer visitParamIds(FunctionsParser.ParamIdsContext ctx){
-			System.out.println("visitou paramIds");
-			return visit(ctx.paramIds(0)) + visit(ctx.paramIds(1));
-		}
+	public Integer visitParamIds(FunctionsParser.ParamIdsContext ctx){
+		System.out.println("visitou paramIds");
+		return visit(ctx.ids(0)) + visit(ctx.ids(1));
+	}
 
-		public Integer visitParamId(FunctionsParser.ParamIdContext ctx){
-			param.put(ctx.ID().getText(), "PARAM");
-			System.out.println("visitou paramId");
-			return 1;
-		}
+	public Integer visitParamId(FunctionsParser.ParamIdContext ctx){
+		param.add(ctx.ID().getText());
+		System.out.println("visitou paramId");
+		return 1;
+	}
 
-    public Integer visitFunction(FunctionsParser.FuncContext ctx) {
-    // 	String type = dec.get(ctx.ID().getText());
-    // 	if(type != null && type.equals("FUNC")) {
-    // 		dec.get(ctx.ID().getText());
-    // 	}else if (type == null){
-		// 	//ERRO não foi declarado
-		// 	System.out.println("Symbol undeclared: " + ctx.ID().getText());
-		// }else{
-		// 	//ERRO bad use
-		// 	System.out.println("Bad used symbol: " + ctx.ID().getText());
-    //
-		// }
-
+    public Integer visitFunction(FunctionsParser.FunctionContext ctx) {
+     	if(var.contains(ctx.ID().getText())) {
+		 	//ERRO bad use
+		 	System.out.println("Bad used symbol: " + ctx.ID().getText());
+     	}else if (funcs.get(ctx.ID().getText()) == null){
+		 	//ERRO não foi declarado
+		 	System.out.println("Symbol undeclared: " + ctx.ID().getText());
+     	}
+     	
+     	int n = visit(ctx.values());
+     	
+     	System.out.println("argumentos: " + n);
+     	
+     	if(n != funcs.get(ctx.ID().getText())) {
+     		//ERRO numero de argumentos errado
+     		System.out.println("numero de argumentos errado");
+     	}
+     	
 		return 0;
 
     }
+    
 
-    public Integer visitExprSoma(FunctionsParser.ExprSomaContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+    public Integer visitExprSoma(FunctionsParser.ExprSomaContext ctx){ 
+        System.out.println("Passou em: visitExprSoma");
+    	visit(ctx.expr());
+    	visit(ctx.muldiv());
+    	return 0;
+    } //visit children vai descer na árvore visitando os filhos
 
-		public Integer visitExprSub(FunctionsParser.ExprSubContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+	public Integer visitExprSub(FunctionsParser.ExprSubContext ctx){ 
+        System.out.println("Passou em: visitExprSub");
+		visit(ctx.expr());
+    	visit(ctx.muldiv());
+    	return 0;
+	} //visit children vai descer na árvore visitando os filhos
 
-		public Integer visitExprMuldiv(FunctionsParser.ExprMuldivContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+	public Integer visitExprMuldiv(FunctionsParser.ExprMuldivContext ctx){ 
+        System.out.println("Passou em: visitExprMuldiv");
+		return visit(ctx.muldiv()); 
+	} //visit children vai descer na árvore visitando os filhos
 
-		public Integer visitMuldivMul(FunctionsParser.MuldivMulContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+	public Integer visitMuldivMul(FunctionsParser.MuldivMulContext ctx){
+        System.out.println("Passou em: visitMuldivMul");
+		visit(ctx.muldiv());
+    	visit(ctx.paren());
+    	return 0;
+	} //visit children vai descer na árvore visitando os filhos
 
-		public Integer visitMuldivDiv(FunctionsParser.MuldivDivContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+	public Integer visitMuldivDiv(FunctionsParser.MuldivDivContext ctx){
+        System.out.println("Passou em: visitMuldivDiv");
+        visit(ctx.muldiv());
+    	visit(ctx.paren());
+    	return 0;
+	} //visit children vai descer na árvore visitando os filhos
 
-		public Integer visitMuldivParen(FunctionsParser.MuldivParenContext ctx){ return visit.children(); } //visit children vai descer na árvore visitando os filhos
+	public Integer visitMuldivParen(FunctionsParser.MuldivParenContext ctx){
+        System.out.println("Passou em: visitMuldivParen");
+		return visit(ctx.paren()); 
+	} //visit children vai descer na árvore visitando os filhos
 
-		public Integer visitParenId(FunctionsParser.ParenIDContext ctx){
-			System.out.println("parenid")
-			if(param.get(ctx.ID().getText()) == NULL){ //Se não tem id no parametro local, erro não foi declarado
-				System.out.println("Symbol undeclared: " + ctx.ID().getText());
-			}
+	public Integer visitParenID(FunctionsParser.ParenIDContext ctx){
+		System.out.println("parenid");
+		if(!param.contains(ctx.ID().getText()) && !var.contains(ctx.ID().getText())){ //Se não tem id no parametro local, erro não foi declarado
+			System.out.println("Symbol undeclared: " + ctx.ID().getText());
 		}
+		
+		return 0;
+	}
+	
+	public Integer visitParenFunc(FunctionsParser.ParenFuncContext ctx) {
+		return visit(ctx.func());
+	}
+	
+	public Integer visitArgvNum(FunctionsParser.ArgvNumContext ctx) {
+		return 1;
+	}
+	
+	public Integer visitArgvId(FunctionsParser.ArgvIdContext ctx) {
+		String id = ctx.ID().getText();
+		if(!param.contains(id) && !var.contains(id)) {
+			//ERRO argumento inválido
+			System.out.println("Argumento inválido");
+		}
+		return 1;
+	}
+	
+	public Integer visitArgvFunc(FunctionsParser.ArgvFuncContext ctx) {
+		return visit(ctx.values(0)) + visit(ctx.values(1));
+	}
 
-		public Integer visit
+//		public Integer visit
 }

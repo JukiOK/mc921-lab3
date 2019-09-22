@@ -1,5 +1,7 @@
 grammar Functions;  
 
+source: root EOF;
+
 root: root root
    | dec
    ;
